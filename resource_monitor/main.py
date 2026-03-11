@@ -24,7 +24,7 @@ locale = {
         'cpu': 'CPU usage',
         'ram': 'RAM usage',
         'disk': 'Disk usage',
-        'gpu': 'GPU VRAM usage',
+        'gpu': 'VRAM usage',
         'gpu_error': 'NVIDIA GPU not detected',
         'gpu_table': 'Processes on GPU'
     },
@@ -33,7 +33,7 @@ locale = {
         'cpu': 'Uso da CPU',
         'ram': 'Uso da RAM',
         'disk': 'Uso de disco',
-        'gpu': 'Uso da VRAM da GPU',
+        'gpu': 'Uso de VRAM',
         'gpu_error': 'GPU NVIDIA não detectada',
         'gpu_table': 'Processos na GPU'
     }
@@ -139,6 +139,7 @@ def get_nvidia_gpu_usage():
         gpus = []
 
         for gpu in root.findall("gpu"):
+            gpu_name = ' '.join(gpu.find("product_name").text.split()[-2:])
             util = float(gpu.find("utilization/gpu_util").text.replace(" %", ""))
             mem_used = float(gpu.find("fb_memory_usage/used").text.replace(" MiB", ""))
             mem_total = float(gpu.find("fb_memory_usage/total").text.replace(" MiB", ""))
@@ -173,6 +174,7 @@ def get_nvidia_gpu_usage():
             processes.sort(key=lambda p: p["vram"], reverse=True)
 
             gpus.append({
+                "name": gpu_name,
                 "util": util,
                 "mem_used": mem_used,
                 "mem_total": mem_total,
@@ -295,11 +297,11 @@ def main():
     processes = []
     if gpus:
         for i, gpu in enumerate(gpus):
-            num = i if len(gpus) > 1 else ''
+            gpu_id = f'GPU{i} ' if len(gpus) > 1 else ''
 
             used = gpu['mem_used']*1024**2
             total = gpu['mem_total']*1024**2
-            str += f"{label_color}{strings['gpu']}{num}{RESET} "
+            str += f"{label_color}{strings['gpu']} ({gpu_id}{gpu['name']}){RESET} "
             str += progress_bar(used=used, total=total, width=bar_width, color_percents=(40, 70)) + '\n'
 
             processes += gpu['processes']
