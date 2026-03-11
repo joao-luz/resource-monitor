@@ -46,6 +46,7 @@ def parse_args():
     parser.add_argument('--interval', type=float, help='psutil\'s interval for capturing CPU usage', default=1.0)
     parser.add_argument('--bar_width', type=int, help='Width of progress bars', default=40)
     parser.add_argument('--lang', type=str, choices=['pt', 'en'], help='Language to output monitor info', default='pt')
+    parser.add_argument('--hide_gpu_procs', action='store_true', help='Whether to show GPU procs or not', default=False)
 
     return parser.parse_args()
     
@@ -324,7 +325,7 @@ def main():
             line = diff*' ' + line
             print(line)
 
-    if gpus:
+    if gpus and not args.hide_gpu_procs:
         total_gpu_mem_use = sum([p['vram'] for p in processes])
         faint_rows = sum([p['vram'] < total_gpu_mem_use*0.2 for p in processes])
         print(f'{main_color}{UNDERLINE}' + ' '*largest_line_len + f'{RESET}')

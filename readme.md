@@ -59,7 +59,7 @@ source .venv/bin/activate
 Create a symbolic link from the package inside the venv to an executable placed in a dir like `/usr/local/bin`:
 
 ```bash
-ln -s /opt/resource_monitor/.venv/bin/resource_monitor /usr/local/bin/resource_monitor
+ln -s /opt/resource-monitor/.venv/bin/resource_monitor /usr/local/bin/resource_monitor
 ```
 
 
@@ -74,6 +74,8 @@ Here are the arguments available when running the script:
 * `--bar_width` - Width of progress bars in characters. Defaults to `40`
 
 * `--lang` - Language used to output monitor information. Choices are `pt` and `en`. Defaults to `pt`
+
+* `--hide_gpu_procs` - Whether to show GPU procs or not. Defaults to `False`
 
 ## Example output
 
