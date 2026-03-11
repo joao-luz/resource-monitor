@@ -252,7 +252,13 @@ def print_table(rows, width=None, color='', col_format={}, faint_rows=0):
             print(f'{color}{line}{RESET}')
 
 
-def main(disks={}, interval=1.0, bar_width=40, strings=locale['pt']):
+def main():
+    args = parse_args()
+    disks = {args.disks[i]: args.disks[i+1] for i in range(0, len(args.disks), 2)}
+    interval = args.interval
+    bar_width = args.bar_width
+    strings = locale[args.lang]
+
     main_color = WHITE
     label_color = BLUE
 
@@ -327,7 +333,4 @@ def main(disks={}, interval=1.0, bar_width=40, strings=locale['pt']):
                     col_format={'vram': lambda x: format_bytes_compact(x*1024**2)}, faint_rows=faint_rows)
 
 if __name__ == "__main__":
-    args = parse_args()
-    disks = {args.disks[i]: args.disks[i+1] for i in range(0, len(args.disks), 2)}
-    strings = locale[args.lang]
-    main(disks, args.interval, args.bar_width, strings)
+    main()
