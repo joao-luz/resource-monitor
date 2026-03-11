@@ -73,7 +73,7 @@ Here are the arguments available when running the script:
 
 * `--bar_width` - Width of progress bars in characters. Defaults to `40`
 
-* `--lang` - Language used to output monitor information. Choices are `pt` and `en`. Default: `pt`
+* `--lang` - Language used to output monitor information. Choices are `pt` and `en`. Defaults to `pt`
 
 ## Example output
 
