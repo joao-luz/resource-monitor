@@ -48,15 +48,6 @@ def parse_args():
     parser.add_argument('--lang', type=str, choices=['pt', 'en'], help='Language to output monitor info', default='pt')
 
     return parser.parse_args()
-
-
-def color_for_percent(percent):
-    if percent < 70:
-        return GREEN
-    elif percent < 90:
-        return YELLOW
-    else:
-        return RED
     
 
 def format_bytes_compact(num_bytes, target_unit=None):
@@ -79,12 +70,18 @@ def format_bytes_compact(num_bytes, target_unit=None):
     return f"{formatted}{unit}"
 
 
-def progress_bar(percent=None, used=None, total=None, width=50, unit=None):
+def progress_bar(percent=None, used=None, total=None, width=50, unit=None, color_percents=(70, 90)):
     percent = percent if percent is not None else 100*used/total
     filled = int(width * percent / 100)
     empty = width - filled
     bar = "|" * filled + " " * empty
-    color = color_for_percent(percent)
+
+    if percent < color_percents[0]:
+        color = GREEN
+    elif percent < color_percents[1]:
+        color = YELLOW
+    else:
+        color = RED
 
     if (used is None or total is None):
         value = f'{percent:.1f}%'
@@ -296,7 +293,7 @@ def main(disks={}, interval=1.0, bar_width=40, strings=locale['pt']):
             used = gpu['mem_used']*1024**2
             total = gpu['mem_total']*1024**2
             str += f"{label_color}{strings['gpu']}{num}{RESET} "
-            str += progress_bar(used=used, total=total, width=bar_width) + '\n'
+            str += progress_bar(used=used, total=total, width=bar_width, color_percents=(40, 70)) + '\n'
 
             processes += gpu['processes']
     else:
