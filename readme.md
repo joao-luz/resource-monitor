@@ -30,6 +30,13 @@ For installing it globally, run:
 pipx install --global .
 ```
 
+You may remove the `build/` and `.egg-info/` dirs post installation:
+
+```bash
+rm -rf build/
+rm -rf resource_monitor.egg-info/`
+```
+
 ## Arguments
 
 Here are the arguments available when running the script:
