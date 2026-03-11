@@ -224,9 +224,9 @@ def print_table(rows, width=None, color='', col_format={}, faint_rows=0):
     min_width = sum(widths.values()) + n + 1
 
     # Stretch largest column if width is specified and larger than minimal
-    if width and width > min_width:
-        extra = width - min_width
+    if width:
         largest_col = max(widths, key=widths.get)
+        extra = width - min_width
         widths[largest_col] += extra
 
     # Truncate content if needed
