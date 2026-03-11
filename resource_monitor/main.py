@@ -331,6 +331,9 @@ def main():
         print(f'{main_color}' + strings['gpu_table'].center(largest_line_len) + f'{RESET}')
         print_table(processes, width=largest_line_len, color=main_color, 
                     col_format={'vram': lambda x: format_bytes_compact(x*1024**2)}, faint_rows=faint_rows)
+        
+    print(largest_line_len*'═')
+    
 
 if __name__ == "__main__":
     main()
