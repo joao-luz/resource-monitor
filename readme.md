@@ -34,7 +34,7 @@ You may remove the `build/` and `.egg-info/` dirs post installation:
 
 ```bash
 rm -rf build/
-rm -rf resource_monitor.egg-info/`
+rm -rf resource_monitor.egg-info/
 ```
 
 ## Arguments
