@@ -37,6 +37,32 @@ rm -rf build/
 rm -rf resource_monitor.egg-info/
 ```
 
+## Installing without pipx
+
+If you want to have a globally callable `resource_monitor` script but can't do it via pipx (e.g. you are using Ubuntu 24.04 and the available pipx version doesn't support the `--global` argument), you may either find another way to install a more recent version of pipx or perform the following workaroud (you'll need sudo privileges):
+
+`cd` into a directory such as `/opt` and clone this repository:
+
+```bash
+git clone https://github.com/joao-luz/resource-monitor
+cd resource-monitor
+```
+
+Create a venv and install the package via the venv's pip:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+.venv/bin/pip install .
+```
+
+Create a symbolic link from the package inside the venv to an executable placed in a dir like `/usr/local/bin`:
+
+```bash
+ln -s /opt/resource_monitor/.venv/bin/resource_monitor /usr/local/bin/resource_monitor
+```
+
+
 ## Arguments
 
 Here are the arguments available when running the script:
