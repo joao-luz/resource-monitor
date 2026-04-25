@@ -73,8 +73,10 @@ def format_bytes_compact(num_bytes, target_unit=None):
 
 def progress_bar(percent=None, used=None, total=None, width=50, unit=None, color_percents=(70, 90)):
     percent = percent if percent is not None else 100*used/total
-    filled = int(width * percent / 100)
-    empty = width - filled
+
+    progress_width = width-2
+    filled = int(progress_width * percent / 100)
+    empty = progress_width - filled
     bar = "|" * filled + " " * empty
 
     if percent < color_percents[0]:
