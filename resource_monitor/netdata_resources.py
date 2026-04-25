@@ -3,8 +3,8 @@ import sys
 import json
 import re
 
-from utils import progress_bar
-from ascii_escape import *
+from .utils import progress_bar
+from .ascii_escape import *
 
 
 NETDATA_PORT = 19999

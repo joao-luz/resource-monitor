@@ -3,8 +3,8 @@ import subprocess
 import re
 
 from argparse import ArgumentParser
-from utils import progress_bar, format_bytes_compact
-from ascii_escape import *
+from .utils import progress_bar, format_bytes_compact
+from .ascii_escape import *
 
 
 locale = {
@@ -287,7 +287,7 @@ def main():
     print(largest_line_len*'═')
 
     if args.netdata_resources:
-        from netdata_resources import print_netdata_resources
+        from .netdata_resources import print_netdata_resources
         import socket
 
         hostname = socket.gethostname()

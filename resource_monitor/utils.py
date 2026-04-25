@@ -1,4 +1,4 @@
-from ascii_escape import *
+from .ascii_escape import *
 
 
 def format_bytes_compact(num_bytes, target_unit=None):

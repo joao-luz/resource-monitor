@@ -1,4 +1,5 @@
-.venv
+.venv/
+venv/
 build/
 *.egg-info/
 *.json
