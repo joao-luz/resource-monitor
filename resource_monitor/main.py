@@ -298,6 +298,8 @@ def main():
 
         print_netdata_resources(args.netdata_host, largest_line_len, skip_ip=local_ip)
     
+        print(largest_line_len*'═')
+
 
 if __name__ == "__main__":
     main()

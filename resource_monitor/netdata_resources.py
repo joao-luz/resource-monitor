@@ -61,7 +61,8 @@ def print_usage_grid(nodes, width=60, spacing=2):
         for l, r in zip(left, right):
             print(l + (' '*spacing) + r)
 
-        print()
+        if i < len(nodes)-2:
+            print()
 
 
 def get_nodes(host_address):
