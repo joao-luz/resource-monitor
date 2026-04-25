@@ -1,21 +1,10 @@
 import psutil
 import subprocess
 import re
+
 from argparse import ArgumentParser
-
-
-RESET = "\033[0m"
-BOLD = "\033[1m"
-UNDERLINE = "\033[4m"
-FAINT = "\033[2m"
-NEGATIVE = "\033[7m"
-
-WHITE = ""
-GREEN = "\033[0;32m"
-YELLOW = "\033[93m"
-RED = "\033[91m"
-CYAN = "\033[96m"
-BLUE = "\033[0;34m"
+from utils import progress_bar, format_bytes_compact
+from ascii_escape import *
 
 
 locale = {
@@ -26,7 +15,8 @@ locale = {
         'disk': 'Disk usage',
         'gpu': 'VRAM usage',
         'gpu_error': 'NVIDIA GPU not detected',
-        'gpu_table': 'Processes on GPU'
+        'gpu_table': 'Processes on GPU',
+        'other_machines': 'Other machines in network'
     },
     'pt': {
         'header': 'Monitor de Recursos do Sistema',
@@ -35,7 +25,8 @@ locale = {
         'disk': 'Uso de disco',
         'gpu': 'Uso de VRAM',
         'gpu_error': 'GPU NVIDIA não detectada',
-        'gpu_table': 'Processos na GPU'
+        'gpu_table': 'Processos na GPU',
+        'other_machines': 'Outras máquinas na rede'
     }
 }
 
@@ -48,55 +39,11 @@ def parse_args():
     parser.add_argument('--lang', type=str, choices=['pt', 'en'], help='Language to output monitor info', default='pt')
     parser.add_argument('--hide_gpu_procs', action='store_true', help='Whether to show GPU procs or not', default=False)
 
+    parser.add_argument('--netdata_resources', action='store_true', help='Whether to show netdata resources of other nodes in network', default=False)
+    parser.add_argument('--netdata_host', type=str, help='Netdata host address to fetch node info', default=None)
+
     return parser.parse_args()
     
-
-def format_bytes_compact(num_bytes, target_unit=None):
-    units = ["B", "K", "M", "G", "T"]
-    value = float(num_bytes)
-
-    for unit in units:
-        if value < 1024 or unit == units[-1] or unit == target_unit:
-            break
-        value /= 1024
-
-    # Adjust precision to keep numeric part <= 3 chars
-    if value >= 100:
-        formatted = f"{int(round(value))}"
-    elif value >= 10:
-        formatted = f"{value:.0f}".rstrip(".")
-    else:
-        formatted = f"{value:.1f}".rstrip("0").rstrip(".")
-
-    return f"{formatted}{unit}"
-
-
-def progress_bar(percent=None, used=None, total=None, width=50, unit=None, color_percents=(70, 90)):
-    percent = percent if percent is not None else 100*used/total
-
-    progress_width = width-2
-    filled = int(progress_width * percent / 100)
-    empty = progress_width - filled
-    bar = "|" * filled + " " * empty
-
-    if percent < color_percents[0]:
-        color = GREEN
-    elif percent < color_percents[1]:
-        color = YELLOW
-    else:
-        color = RED
-
-    if (used is None or total is None):
-        value = f'{percent:.1f}%'
-    else:
-        used = format_bytes_compact(used, target_unit=unit)
-        total = format_bytes_compact(total, target_unit=unit)
-        value = f'{used}/{total}'
-    
-    str = f"{BOLD}[{RESET}{color}{bar[:-len(value)]}{value}{RESET}{BOLD}]{RESET}"
-
-    return str
-
 
 def get_cpu_usage(interval=1):
     return psutil.cpu_percent(interval=interval)
@@ -338,6 +285,18 @@ def main():
                     col_format={'vram': lambda x: format_bytes_compact(x*1024**2)}, faint_rows=faint_rows)
         
     print(largest_line_len*'═')
+
+    if args.netdata_resources:
+        from netdata_resources import print_netdata_resources
+        import socket
+
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+
+        print(strings['other_machines'].center(largest_line_len))
+        print(largest_line_len*'═')
+
+        print_netdata_resources(args.netdata_host, largest_line_len, skip_ip=local_ip)
     
 
 if __name__ == "__main__":

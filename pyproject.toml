@@ -5,6 +5,7 @@ description = "A simple resource monitor."
 requires-python = ">=3.8"
 dependencies = [
     "psutil",
+    "requests>=2.32.4",
 ]
 
 [project.scripts]
