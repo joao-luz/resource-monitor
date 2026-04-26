@@ -43,6 +43,7 @@ def progress_bar(percent=None, used=None, total=None, width=50, unit=None, color
         total = format_bytes_compact(total, target_unit=unit)
         value = f'{used}/{total}'
     
-    str = f"{BOLD}[{RESET}{color}{bar[:-len(value)]}{value}{RESET}{BOLD}]{RESET}"
+    bar = bar[:-len(value)] + value
+    str = f"{BOLD}[{RESET}{color}{bar[:filled]}{RESET}{BOLD}{DARKGRAY}{bar[filled:]}{RESET}{BOLD}]{RESET}"
 
     return str
