@@ -94,7 +94,8 @@ def get_ram_usage(all_metrics):
     buffers = data['dimensions']['buffers']['value']
     total = used + free + cached + buffers
 
-    return used, total
+    # Convert from MiB to bytes
+    return used*1.049e+6, total*1.049e+6
 
 
 def get_gpu_usage(all_metrics):
