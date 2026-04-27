@@ -77,12 +77,12 @@ def get_nodes(host_address):
 
 def get_all_metrics(ip):
     try:
-        r = requests.get(f"http://{ip}:{NETDATA_PORT}/api/v3/allmetrics?format=json")
+        r = requests.get(f"http://{ip}:{NETDATA_PORT}/api/v3/allmetrics?format=json", timeout=1)
         r.raise_for_status()
         return r.json()
     except Exception as e:
-        print("Failed to retrieve nodes:", e)
-        sys.exit(1)
+        return None
+
 
 def get_ram_usage(all_metrics):
     key = 'system.ram'
@@ -222,6 +222,10 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
             continue
 
         all_metrics = get_all_metrics(ip)
+
+        if all_metrics is None:
+            continue
+
         ram = get_ram_usage(all_metrics)
         gpu = get_gpu_usage(all_metrics)
 
