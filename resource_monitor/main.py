@@ -39,7 +39,6 @@ def parse_args():
     parser.add_argument('--lang', type=str, choices=['pt', 'en'], help='Language to output monitor info', default='pt')
     parser.add_argument('--hide_gpu_procs', action='store_true', help='Whether to show GPU procs or not', default=False)
 
-    parser.add_argument('--netdata_resources', action='store_true', help='Whether to show netdata resources of other nodes in network', default=False)
     parser.add_argument('--netdata_host', type=str, help='Netdata host address to fetch node info', default=None)
 
     return parser.parse_args()
@@ -286,7 +285,7 @@ def main():
         
     print(largest_line_len*'═')
 
-    if args.netdata_resources:
+    if args.netdata_host:
         from .netdata_resources import print_netdata_resources
         import socket
 
