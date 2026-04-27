@@ -218,7 +218,7 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
         hostname = node.get("nm", node_id)
         ip = node.get('labels').get('_net_default_iface_ip')
 
-        if skip_ip and ip in skip_ip:
+        if ip == 'unknown' or (skip_ip and ip in skip_ip):
             continue
 
         all_metrics = get_all_metrics(ip)
