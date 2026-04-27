@@ -2,12 +2,16 @@ import requests
 import sys
 import json
 import re
+import getpass
 
-from .utils import progress_bar
+from .utils import progress_bar, write_json_to_cache
 from .ascii_escape import *
 
 
 NETDATA_PORT = 19999
+
+username = getpass.getuser()
+CACHE_DIR = f'/home/{username}/.cache/resource_monitor'
 
 def pad_center(text, length, fill):
     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
@@ -203,7 +207,7 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
 
     # Getting the GPU name takes a long time via a /data query to netdata
     # so we'll use a simple local cache for gpu names and update it every week
-    gpu_name_map_filepath = 'gpu_name_map.json'
+    gpu_name_map_filepath = f'{CACHE_DIR}/gpu_name_map.json'
     gpu_name_map = load_name_map(gpu_name_map_filepath)
 
     node_info = []
@@ -253,5 +257,4 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
 
     print_usage_grid(node_info, width=width, spacing=spacing)
 
-    with open(gpu_name_map_filepath, 'w') as f:
-        json.dump(gpu_name_map, f)
+    write_json_to_cache(gpu_name_map, gpu_name_map_filepath)

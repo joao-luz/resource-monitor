@@ -47,3 +47,13 @@ def progress_bar(percent=None, used=None, total=None, width=50, unit=None, color
     str = f"{BOLD}[{RESET}{color}{bar[:filled]}{RESET}{BOLD}{DARKGRAY}{bar[filled:]}{RESET}{BOLD}]{RESET}"
 
     return str
+
+
+def write_json_to_cache(data, cache_path):
+    from pathlib import Path
+    import json
+
+    Path(cache_path).parent.mkdir(exist_ok=True, parents=True)
+
+    with open(cache_path, 'w') as f:
+        json.dump(data, f)
