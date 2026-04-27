@@ -2,64 +2,82 @@
 
 A simple resource monitor that shows the current CPU, RAM, drive and GPU usages, along with current GPU processes. This is useful to use on a machine learning lab infrastructure: run it when a user logs in via SSH and they'll have info on the machine's resources.
 
-## Running
+## Installing and running
 
-Install required packages:
+### Via uv
 
-```sh
-pip install psutil
+To use the [uv](https://docs.astral.sh/uv/) package manager, init uv:
+
+```
+uv init
 ```
 
-Then run:
-
-```sh
-python3 resource_monitor/main.py
+And add the package:
+```
+uv add "resource_monitor @ git+https://github.com/joao-luz/resource-monitor.git"
 ```
 
-## Installing as pipx package
+To run, do:
 
-[pipx](https://github.com/pypa/pipx) is a package manager for python applications. Use this tool to install `resource_monitor` as a package in your system. For that, `cd` into this repo's root directory and run:
-
-```bash
-pipx install .
+```
+uv run resource_monitor
 ```
 
-For installing it globally, run:
+### Via pip
 
-```bash
-pipx install --global .
+Create a virtual environment:
+
+```
+python -m venv .venv
 ```
 
-You may remove the `build/` and `.egg-info/` dirs post installation:
+Use the env's pip:
 
-```bash
-rm -rf build/
-rm -rf resource_monitor.egg-info/
+```
+.venv/bin/pip install "resource_monitor @ git+https://github.com/joao-luz/resource-monitor.git"
 ```
 
-## Installing without pipx
+To run, do:
 
-If you want to have a globally callable `resource_monitor` script but can't do it via pipx (e.g. you are using Ubuntu 24.04 and the available pipx version doesn't support the `--global` argument), you may either find another way to install a more recent version of pipx or perform the following workaroud (you'll need sudo privileges):
-
-`cd` into a directory such as `/opt` and clone this repository:
-
-```bash
-git clone https://github.com/joao-luz/resource-monitor
-cd resource-monitor
+```
+.venv/bin/resource_monitor
 ```
 
-Create a venv and install the package via the venv's pip:
+### Via pipx
 
-```bash
+You may also use [pipx](https://github.com/pypa/pipx) to install it globally:
+
+```
+pipx install "resource_monitor @ git+https://github.com/joao-luz/resource-monitor.git"
+```
+
+To run, do:
+
+```
+resource_monitor
+```
+
+### Installing globally without pipx
+
+If you want to have a globally callable `resource_monitor` script but can't do it via pipx, perform the following (you might need sudo privileges):
+
+`cd` into a directory such as `/opt`, create a venv and install the package via the venv's pip:
+
+```
 python3 -m venv .venv
-source .venv/bin/activate
-.venv/bin/pip install .
+.venv/bin/pip install "resource_monitor @ git+https://github.com/joao-luz/resource-monitor.git"
 ```
 
 Create a symbolic link from the package inside the venv to an executable placed in a dir like `/usr/local/bin`:
 
-```bash
+```
 ln -s /opt/resource-monitor/.venv/bin/resource_monitor /usr/local/bin/resource_monitor
+```
+
+To run, do:
+
+```
+resource_monitor
 ```
 
 ## Netdata integration
@@ -87,8 +105,8 @@ Here are the arguments available when running the script:
 
 Running the following:
 
-```sh
-python3 resource_monitor/main.py --disks / SSD --bar_width 50 --lang en
+```
+resource_monitor --disks / SSD --bar_width 50 --lang en
 ```
 
 Prints something like the following on the terminal:
