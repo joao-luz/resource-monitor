@@ -62,6 +62,10 @@ Create a symbolic link from the package inside the venv to an executable placed 
 ln -s /opt/resource-monitor/.venv/bin/resource_monitor /usr/local/bin/resource_monitor
 ```
 
+## Netdata integration
+
+[Netdata Cloud](www.netdata.cloud) is a tool for hardware monitoring machines in a network. We provide functionality to fetch data from a Netdata host in order to get information on the resource use of other nodes in the network, as well as expose theirs local IPs. This is useful in a lab setting as one might choose to log into other servers if the one thei're trying to access is currently in use.
+
 
 ## Arguments
 
@@ -76,6 +80,8 @@ Here are the arguments available when running the script:
 * `--lang` - Language used to output monitor information. Choices are `pt` and `en`. Defaults to `pt`
 
 * `--hide_gpu_procs` - Whether to show GPU procs or not. Defaults to `False`
+
+* `--netdata_host` - A host (including port) to fetch Netdata resource use across the network. Defaults to `None`
 
 ## Example output
 
