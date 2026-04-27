@@ -34,7 +34,7 @@ def print_usage_grid(nodes, width=60, spacing=2):
         header_tag = f' {BOLD}{node["hostname"]}{RESET} ({node["ip"]}) '
         header = pad_center(header_tag, col_width, '═')
 
-        gpu_tag = f'GPU ({node['gpu_name']})' if node.get("gpu_total") and node["gpu_total"] > 0 else 'No GPU info'
+        gpu_tag = f'GPU ({node["gpu_name"]})' if node.get("gpu_total") and node["gpu_total"] > 0 else 'No GPU info'
         ram_tag = (len(gpu_tag) - 3) * ' ' + 'RAM'
 
         bar_width = col_width - len(ram_tag) - 1
