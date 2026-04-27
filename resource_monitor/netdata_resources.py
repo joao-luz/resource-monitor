@@ -210,6 +210,7 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
     # so we'll use a simple local cache for gpu names and update it every week
     gpu_name_map_filepath = f'{CACHE_DIR}/gpu_name_map.json'
     gpu_name_map = load_name_map(gpu_name_map_filepath)
+    should_refresh_gpu_name_map = False
 
     node_info = []
 
@@ -237,6 +238,7 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
         if ip in gpu_name_map:
             gpu_name = gpu_name_map[ip]
         elif gpu is not None:
+            should_refresh_gpu_name_map = True
             gpu_name = ' '.join(get_gpu_name(ip).split()[-2:])
             gpu_name_map[ip] = gpu_name
         else:
@@ -260,4 +262,5 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
 
     print_usage_grid(node_info, width=width, spacing=spacing)
 
-    write_json_to_cache(gpu_name_map, gpu_name_map_filepath)
+    if should_refresh_gpu_name_map:
+        write_json_to_cache(gpu_name_map, gpu_name_map_filepath)
