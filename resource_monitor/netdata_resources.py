@@ -34,7 +34,7 @@ def print_usage_grid(nodes, width=60, spacing=2):
         header_tag = f' {BOLD}{node["hostname"]}{RESET} ({node["ip"]}) '
         header = pad_center(header_tag, col_width, '═')
 
-        gpu_tag = f'GPU ({node['gpu_name']})'
+        gpu_tag = f'GPU ({node['gpu_name']})' if node.get("gpu_total") and node["gpu_total"] > 0 else 'No GPU info'
         ram_tag = (len(gpu_tag) - 3) * ' ' + 'RAM'
 
         bar_width = col_width - len(ram_tag) - 1
@@ -50,7 +50,8 @@ def print_usage_grid(nodes, width=60, spacing=2):
                 + progress_bar(used=node["gpu_usage"], total=node["gpu_total"], width=bar_width)
             )
         else:
-            gpu_line = f"{BLUE}GPU{RESET} (não disponível)"
+            gpu_line = f"{DARKGRAY}{gpu_tag}"
+            gpu_line += f' {BOLD}[{RESET}{DARKGRAY}' + '─'* (col_width - len(gpu_tag) - 3) + f'{BOLD}]{RESET}'
 
         return [
             header.ljust(col_width),
@@ -233,14 +234,14 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
         ram = get_ram_usage(all_metrics)
         gpu = get_gpu_usage(all_metrics)
 
-        if gpu is None:
-            continue
-        
         if ip in gpu_name_map:
             gpu_name = gpu_name_map[ip]
-        else:
+        elif gpu is not None:
             gpu_name = ' '.join(get_gpu_name(ip).split()[-2:])
             gpu_name_map[ip] = gpu_name
+        else:
+            gpu = (None, None)
+            gpu_name = ''
         
         node_info.append({
             'hostname': hostname,
@@ -254,6 +255,8 @@ def print_netdata_resources(host_address, width=60, spacing=2, skip_ip=None):
 
     if width % 2:
         spacing += 1
+
+    node_info = sorted(node_info, key=lambda n: n['gpu_name'], reverse=True)
 
     print_usage_grid(node_info, width=width, spacing=spacing)
 
